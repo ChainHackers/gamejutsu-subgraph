@@ -1,6 +1,9 @@
-type ExampleEntity @entity {
+type GameFinishedEntity @entity {
   id: ID!
   count: BigInt!
   gameId: BigInt! # uint256
   winner: Bytes! # address
+  loser: Bytes! # address
+  cheater: Bytes! # address
+  isDraw: Boolean!
 }

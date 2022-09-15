@@ -5,17 +5,17 @@ import {
   GamesStarted,
   PlayerDisqualified
 } from "../generated/Arbiter/Arbiter"
-import { ExampleEntity } from "../generated/schema"
+import { GameFinishedEntity } from "../generated/schema"
 
 export function handleGameFinished(event: GameFinished): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+  let entity = GameFinishedEntity.load(event.transaction.from.toHex())
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
+    entity = new GameFinishedEntity(event.transaction.from.toHex())
 
     // Entity fields can be set using simple assignments
     entity.count = BigInt.fromI32(0)
@@ -27,6 +27,8 @@ export function handleGameFinished(event: GameFinished): void {
   // Entity fields can be set based on event parameters
   entity.gameId = event.params.gameId
   entity.winner = event.params.winner
+  entity.loser = event.params.loser
+  entity.isDraw = event.params.isDraw
 
   // Entities can be written to the store with `.save()`
   entity.save()
@@ -64,4 +66,26 @@ export function handleGameFinished(event: GameFinished): void {
 
 export function handleGamesStarted(event: GamesStarted): void {}
 
-export function handlePlayerDisqualified(event: PlayerDisqualified): void {}
+export function handlePlayerDisqualified(event: PlayerDisqualified): void {
+  //expected the same transaction id for GameFinished event
+  let entity = GameFinishedEntity.load(event.transaction.from.toHex())
+
+  // Entities only exist after they have been saved to the store;
+  // `null` checks allow to create entities on demand
+  if (!entity) {
+    entity = new GameFinishedEntity(event.transaction.from.toHex())
+
+    // Entity fields can be set using simple assignments
+    entity.count = BigInt.fromI32(0)
+  }
+
+  // BigInt and BigDecimal math are supported
+  entity.count = entity.count + BigInt.fromI32(1)
+
+  // Entity fields can be set based on event parameters
+  entity.gameId = event.params.gameId
+  entity.cheater = event.params.player
+
+  // Entities can be written to the store with `.save()`
+  entity.save()
+}
