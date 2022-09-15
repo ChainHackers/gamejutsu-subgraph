@@ -1,6 +1,5 @@
 type GameFinishedEntity @entity {
   id: ID!
-  count: BigInt!
   gameId: BigInt! # uint256
   winner: Bytes! # address
   loser: Bytes! # address
@@ -10,13 +9,12 @@ type GameFinishedEntity @entity {
 
 type InRowCounterEntity @entity {
   id: ID! #address
-  winnerCount: BigInt!
-  loserCount: BigInt!
-  cheaterCount: BigInt!
-  drawCount: BigInt!
-  winnerMaxValue: BigInt!
-  loserMaxValue: BigInt!
-  cheaterMaxValue: BigInt!
-  drawMaxValue: BigInt!
-  
+  winnerCount: Int!
+  loserCount: Int!
+  cheaterCount: Int!
+  drawCount: Int!
+  winnerMaxValue: Int!
+  loserMaxValue: Int!
+  cheaterMaxValue: Int!
+  drawMaxValue: Int!
 }
