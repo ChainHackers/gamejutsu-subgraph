@@ -7,3 +7,16 @@ type GameFinishedEntity @entity {
   cheater: Bytes! # address
   isDraw: Boolean!
 }
+
+type InRowCounterEntity @entity {
+  id: ID! #address
+  winnerCount: BigInt!
+  loserCount: BigInt!
+  cheaterCount: BigInt!
+  drawCount: BigInt!
+  winnerMaxValue: BigInt!
+  loserMaxValue: BigInt!
+  cheaterMaxValue: BigInt!
+  drawMaxValue: BigInt!
+  
+}

@@ -5,7 +5,62 @@ import {
   GamesStarted,
   PlayerDisqualified
 } from "../generated/Arbiter/Arbiter"
-import { GameFinishedEntity } from "../generated/schema"
+import { GameFinishedEntity, InRowCounterEntity } from "../generated/schema"
+
+function maxBigInt(a:BigInt, b:BigInt):BigInt {
+  if (a.ge(b)) {
+    return a;
+  }
+  return b;
+}
+
+function incCounter(inRowCounterEntity: InRowCounterEntity, counter: 'winner' | 'loser' | 'cheater' | 'draw'): InRowCounterEntity {
+  let oldInRowCounterEntity = new InRowCounterEntity(inRowCounterEntity.id)
+  oldInRowCounterEntity.winnerCount = inRowCounterEntity.winnerCount
+  oldInRowCounterEntity.loserCount = inRowCounterEntity.loserCount
+  oldInRowCounterEntity.cheaterCount =  inRowCounterEntity.cheaterCount
+  oldInRowCounterEntity.drawCount =  inRowCounterEntity.drawCount
+  inRowCounterEntity.winnerCount = BigInt.fromI32(0)
+  inRowCounterEntity.loserCount = BigInt.fromI32(0)
+  inRowCounterEntity.cheaterCount = BigInt.fromI32(0)
+  inRowCounterEntity.drawCount = BigInt.fromI32(0)
+  if (counter == 'cheater') {
+    inRowCounterEntity.loserCount = oldInRowCounterEntity.loserCount.plus(BigInt.fromI32(1))
+    inRowCounterEntity.loserMaxValue = maxBigInt(inRowCounterEntity.loserMaxValue, inRowCounterEntity.loserCount)
+    inRowCounterEntity.cheaterCount = oldInRowCounterEntity.cheaterCount.plus(BigInt.fromI32(1))
+    inRowCounterEntity.cheaterMaxValue = maxBigInt(inRowCounterEntity.cheaterMaxValue, inRowCounterEntity.cheaterCount)
+  }
+  if (counter == 'winner') {
+    inRowCounterEntity.winnerCount = oldInRowCounterEntity.winnerCount.plus(BigInt.fromI32(1))
+    inRowCounterEntity.winnerMaxValue = maxBigInt(inRowCounterEntity.winnerMaxValue, inRowCounterEntity.winnerCount)
+  }
+  if (counter == 'loser') {
+    inRowCounterEntity.loserCount = oldInRowCounterEntity.loserCount.plus(BigInt.fromI32(1))
+    inRowCounterEntity.loserMaxValue = maxBigInt(inRowCounterEntity.loserMaxValue, inRowCounterEntity.loserCount)
+  }
+  if (counter == 'draw') {
+    inRowCounterEntity.drawCount = oldInRowCounterEntity.drawCount.plus(BigInt.fromI32(1))
+    inRowCounterEntity.drawMaxValue = maxBigInt(inRowCounterEntity.drawMaxValue, inRowCounterEntity.drawCount)
+  }
+  return inRowCounterEntity;  
+}
+
+function loadInRowCounterEntity(id:string): InRowCounterEntity {
+  let inRowCounterEntity = InRowCounterEntity.load(id)
+  if (!inRowCounterEntity) {
+    inRowCounterEntity = new InRowCounterEntity(id)
+    inRowCounterEntity.winnerCount = BigInt.fromI32(0)
+    inRowCounterEntity.loserCount = BigInt.fromI32(0)
+    inRowCounterEntity.cheaterCount = BigInt.fromI32(0)
+    inRowCounterEntity.drawCount = BigInt.fromI32(0)
+    inRowCounterEntity.winnerMaxValue = BigInt.fromI32(0)
+    inRowCounterEntity.loserMaxValue = BigInt.fromI32(0)
+    inRowCounterEntity.cheaterMaxValue = BigInt.fromI32(0)
+    inRowCounterEntity.drawMaxValue = BigInt.fromI32(0)
+  }
+  return inRowCounterEntity;
+}
+
 
 export function handleGameFinished(event: GameFinished): void {
   // Entities can be loaded from the store using a string ID; this ID
@@ -22,7 +77,7 @@ export function handleGameFinished(event: GameFinished): void {
   }
 
   // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
+  entity.count = entity.count.plus(BigInt.fromI32(1))
 
   // Entity fields can be set based on event parameters
   entity.gameId = event.params.gameId
@@ -33,6 +88,21 @@ export function handleGameFinished(event: GameFinished): void {
   // Entities can be written to the store with `.save()`
   entity.save()
 
+  let winnerInRowCounterEntity = loadInRowCounterEntity(event.params.winner.toHex())
+  let loserInRowCounterEntity = loadInRowCounterEntity(event.params.loser.toHex())
+
+  if (entity.isDraw) {
+    incCounter(winnerInRowCounterEntity, 'draw');
+    incCounter(loserInRowCounterEntity, 'draw');   
+  } else {
+    incCounter(winnerInRowCounterEntity, 'winner');
+    incCounter(loserInRowCounterEntity, 'loser'); 
+  }
+  
+  winnerInRowCounterEntity.save()
+  loserInRowCounterEntity.save()
+  
+  
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with
   // `new Entity(...)`, set the fields that should be updated and save the
@@ -80,7 +150,7 @@ export function handlePlayerDisqualified(event: PlayerDisqualified): void {
   }
 
   // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
+  entity.count = entity.count.plus(BigInt.fromI32(1))
 
   // Entity fields can be set based on event parameters
   entity.gameId = event.params.gameId
@@ -88,4 +158,10 @@ export function handlePlayerDisqualified(event: PlayerDisqualified): void {
 
   // Entities can be written to the store with `.save()`
   entity.save()
+
+  let cheaterInRowCounterEntity = loadInRowCounterEntity(entity.cheater.toHex())
+
+  incCounter(cheaterInRowCounterEntity, 'cheater');
+
+  cheaterInRowCounterEntity.save()
 }
