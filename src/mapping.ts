@@ -14,7 +14,7 @@ function maxBigInt(a:BigInt, b:BigInt):BigInt {
   return b;
 }
 
-function incCounter(inRowCounterEntity: InRowCounterEntity, counter: 'winner' | 'loser' | 'cheater' | 'draw'): InRowCounterEntity {
+function incCounter(inRowCounterEntity: InRowCounterEntity, counter: string): InRowCounterEntity {
   let oldInRowCounterEntity = new InRowCounterEntity(inRowCounterEntity.id)
   oldInRowCounterEntity.winnerCount = inRowCounterEntity.winnerCount
   oldInRowCounterEntity.loserCount = inRowCounterEntity.loserCount
