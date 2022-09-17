@@ -1,9 +1,12 @@
 import {
     GameFinished,
-    GamesStarted,
+    GameStarted,
+    GameProposed,
+    PlayerResigned,
+    SessionAddressRegistered,
     PlayerDisqualified
 } from "../generated/Arbiter/Arbiter"
-import {GameFinishedEntity, InRowCounterEntity} from "../generated/schema"
+import {GameFinishedEntity, InRowCounterEntity, GameEventsEntity} from "../generated/schema"
 
 function incCounter(inRowCounter: InRowCounterEntity, counter: string): InRowCounterEntity {
     if (counter == 'cheater') {
@@ -77,9 +80,6 @@ export function handleGameFinished(event: GameFinished): void {
     loserInRowCounter.save()
 }
 
-export function handleGamesStarted(event: GamesStarted): void {
-}
-
 export function handlePlayerDisqualified(event: PlayerDisqualified): void {
     //expected the same transaction id for GameFinished event
     let entity = GameFinishedEntity.load(event.transaction.hash.toHex())!
@@ -95,4 +95,38 @@ export function handlePlayerDisqualified(event: PlayerDisqualified): void {
     incCounter(cheaterInRowCounter, 'cheater');
 
     cheaterInRowCounter.save()
+}
+
+
+export function handleGameProposed(event: GameProposed): void {
+    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    if (!entity) {
+        entity = new GameEventsEntity(event.params.gameId.toHex())
+    }
+    entity.proposed = true
+    entity.save()
+}
+
+export function handleGamesStarted(event: GameStarted): void {
+    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    if (!entity) {
+        entity = new GameEventsEntity(event.params.gameId.toHex())
+    }
+    entity.started = true
+    entity.save()
+}
+
+
+export function handlePlayerResigned(event: PlayerResigned): void {
+    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    if (!entity) {
+        entity = new GameEventsEntity(event.params.gameId.toHex())
+    }
+    entity.resigned = true
+    entity.save()
+}
+
+
+export function handleSessionAddressRegistered(event: SessionAddressRegistered): void {
+    
 }

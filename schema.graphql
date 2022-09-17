@@ -18,3 +18,10 @@ type InRowCounterEntity @entity {
   cheaterMaxValue: Int!
   drawMaxValue: Int!
 }
+
+type GameEventsEntity @entity {
+  id: ID! #gameId
+  proposed: Boolean!
+  started: Boolean!
+  resigned: Boolean!
+}
