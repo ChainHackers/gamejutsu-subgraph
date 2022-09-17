@@ -1,10 +1,13 @@
-type GameFinishedEntity @entity {
+type GameEntity @entity {
   id: ID!
   gameId: BigInt! # uint256
   winner: Bytes! # address
   loser: Bytes! # address
   cheater: Bytes! # address
   isDraw: Boolean!
+  started: Boolean!
+  resigned: Boolean!
+  finished: Boolean!
 }
 
 type InRowCounterEntity @entity {
@@ -19,9 +22,4 @@ type InRowCounterEntity @entity {
   drawMaxValue: Int!
 }
 
-type GameEventsEntity @entity {
-  id: ID! #gameId
-  proposed: Boolean!
-  started: Boolean!
-  resigned: Boolean!
-}
+

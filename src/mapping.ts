@@ -6,7 +6,7 @@ import {
     SessionAddressRegistered,
     PlayerDisqualified
 } from "../generated/Arbiter/Arbiter"
-import {GameFinishedEntity, InRowCounterEntity, GameEventsEntity} from "../generated/schema"
+import {GameEntity, InRowCounterEntity} from "../generated/schema"
 
 function incCounter(inRowCounter: InRowCounterEntity, counter: string): InRowCounterEntity {
     if (counter == 'cheater') {
@@ -53,15 +53,16 @@ function loadInRowCounterEntity(id: string): InRowCounterEntity {
 export function handleGameFinished(event: GameFinished): void {
     // Entities can be loaded from the store using a string ID; this ID
     // needs to be unique across all entities of the same type
-    let entity = GameFinishedEntity.load(event.transaction.hash.toHex())
+    let entity = GameEntity.load(event.params.gameId.toHex())
     if (!entity) {
-        entity = new GameFinishedEntity(event.transaction.hash.toHex())
+        entity = new GameEntity(event.params.gameId.toHex())
     }
     // Entity fields can be set based on event parameters
     entity.gameId = event.params.gameId
     entity.winner = event.params.winner
     entity.loser = event.params.loser
     entity.isDraw = event.params.isDraw
+    entity.finished = true;
 
     entity.save()
 
@@ -81,8 +82,8 @@ export function handleGameFinished(event: GameFinished): void {
 }
 
 export function handlePlayerDisqualified(event: PlayerDisqualified): void {
-    //expected the same transaction id for GameFinished event
-    let entity = GameFinishedEntity.load(event.transaction.hash.toHex())!
+    
+    let entity = GameEntity.load(event.params.gameId.toHex())!
 
     // Entity fields can be set based on event parameters
     entity.gameId = event.params.gameId
@@ -99,18 +100,17 @@ export function handlePlayerDisqualified(event: PlayerDisqualified): void {
 
 
 export function handleGameProposed(event: GameProposed): void {
-    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    let entity = GameEntity.load(event.params.gameId.toHex())
     if (!entity) {
-        entity = new GameEventsEntity(event.params.gameId.toHex())
+        entity = new GameEntity(event.params.gameId.toHex())
     }
-    entity.proposed = true
     entity.save()
 }
 
 export function handleGamesStarted(event: GameStarted): void {
-    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    let entity = GameEntity.load(event.params.gameId.toHex())
     if (!entity) {
-        entity = new GameEventsEntity(event.params.gameId.toHex())
+        entity = new GameEntity(event.params.gameId.toHex())
     }
     entity.started = true
     entity.save()
@@ -118,9 +118,9 @@ export function handleGamesStarted(event: GameStarted): void {
 
 
 export function handlePlayerResigned(event: PlayerResigned): void {
-    let entity = GameEventsEntity.load(event.params.gameId.toHex())
+    let entity = GameEntity.load(event.params.gameId.toHex())
     if (!entity) {
-        entity = new GameEventsEntity(event.params.gameId.toHex())
+        entity = new GameEntity(event.params.gameId.toHex())
     }
     entity.resigned = true
     entity.save()
