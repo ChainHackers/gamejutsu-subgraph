@@ -45,6 +45,14 @@ function loadInRowCounterEntity(id: string): InRowCounterEntity {
     let entity = InRowCounterEntity.load(id)
     if (!entity) {
         entity = new InRowCounterEntity(id)
+        entity.winnerCount = 0;
+        entity.loserCount = 0;
+        entity.drawCount = 0;
+        entity.cheaterCount = 0;
+        entity.winnerMaxValue = 0;
+        entity.loserMaxValue = 0;
+        entity.drawMaxValue = 0;
+        entity.cheaterMaxValue = 0;
     }
     return entity;
 }
