@@ -23,9 +23,9 @@ dataSources:
         - event: GameFinished(uint256,address,address,bool)
           handler: handleGameFinished
         - event: GameStarted(uint256,uint256,address[2])
-          handler: handleGamesStarted
+          handler: handleGameStarted
         - event: GameProposed(uint256,uint256,address)
-          handler: handleGamesProposed  
+          handler: handleGameProposed  
         - event: PlayerResigned(uint256,address)
           handler: handlePlayerResigned
         - event: SessionAddressRegistered(uint256,address,address)

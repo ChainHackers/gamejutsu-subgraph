@@ -107,7 +107,7 @@ export function handleGameProposed(event: GameProposed): void {
     entity.save()
 }
 
-export function handleGamesStarted(event: GameStarted): void {
+export function handleGameStarted(event: GameStarted): void {
     let entity = GameEntity.load(event.params.gameId.toHex())
     if (!entity) {
         entity = new GameEntity(event.params.gameId.toHex())
