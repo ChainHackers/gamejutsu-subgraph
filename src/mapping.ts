@@ -104,6 +104,7 @@ export function handleGameProposed(event: GameProposed): void {
     if (!entity) {
         entity = new GameEntity(event.params.gameId.toHex())
     }
+    entity.gameId = event.params.gameId;
     entity.save()
 }
 
@@ -112,6 +113,7 @@ export function handleGameStarted(event: GameStarted): void {
     if (!entity) {
         entity = new GameEntity(event.params.gameId.toHex())
     }
+    entity.gameId = event.params.gameId;
     entity.started = true
     entity.save()
 }
@@ -122,6 +124,7 @@ export function handlePlayerResigned(event: PlayerResigned): void {
     if (!entity) {
         entity = new GameEntity(event.params.gameId.toHex())
     }
+    entity.gameId = event.params.gameId;
     entity.resigned = true
     entity.save()
 }
