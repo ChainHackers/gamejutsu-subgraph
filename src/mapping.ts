@@ -91,7 +91,7 @@ export function handlePlayerDisqualified(event: PlayerDisqualified): void {
 
     entity.save()
 
-    let cheaterInRowCounter = loadInRowCounterEntity(entity.cheater.toHex())
+    let cheaterInRowCounter = loadInRowCounterEntity(event.params.player.toHex())
 
     incCounter(cheaterInRowCounter, 'cheater');
 

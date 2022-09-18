@@ -1,13 +1,13 @@
 type GameEntity @entity {
   id: ID!
   gameId: BigInt! # uint256
-  winner: Bytes! # address
-  loser: Bytes! # address
-  cheater: Bytes! # address
-  isDraw: Boolean!
-  started: Boolean!
-  resigned: Boolean!
-  finished: Boolean!
+  winner: Bytes # address
+  loser: Bytes # address
+  cheater: Bytes # address
+  isDraw: Boolean
+  started: Boolean
+  resigned: Boolean
+  finished: Boolean
 }
 
 type InRowCounterEntity @entity {

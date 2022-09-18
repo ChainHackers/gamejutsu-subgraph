@@ -8,6 +8,7 @@ dataSources:
     source:
       address: "0xcdf1742F9289C85286b0639d5Bb5052FB5D7b2A8"
       abi: Arbiter
+      startBlock: 33262600
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
