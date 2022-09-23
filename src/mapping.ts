@@ -113,6 +113,7 @@ export function handleGameProposed(event: GameProposed): void {
         entity = new GameEntity(event.params.gameId.toHex())
     }
     entity.gameId = event.params.gameId;
+    entity.proposer = event.transaction.from;
     entity.save()
 }
 
