@@ -114,6 +114,7 @@ export function handleGameProposed(event: GameProposed): void {
     }
     entity.gameId = event.params.gameId;
     entity.proposer = event.transaction.from;
+    entity.stake = event.params.stake;
     entity.save()
 }
 
