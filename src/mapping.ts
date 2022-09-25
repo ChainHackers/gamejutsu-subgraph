@@ -115,6 +115,7 @@ export function handleGameProposed(event: GameProposed): void {
     entity.gameId = event.params.gameId;
     entity.proposer = event.transaction.from;
     entity.stake = event.params.stake;
+    entity.rules = event.params.rules;
     entity.save()
 }
 
@@ -125,6 +126,7 @@ export function handleGameStarted(event: GameStarted): void {
     }
     entity.gameId = event.params.gameId;
     entity.started = true
+    entity.rules = event.params.rules;
     entity.save()
 }
 

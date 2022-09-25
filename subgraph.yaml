@@ -6,7 +6,7 @@ dataSources:
     name: Arbiter
     network: matic
     source:
-      address: "0xC5FE3AF8de2A8790e155d6C67b75719e6abcD7e7"
+      address: "0x1f0b6DB015198028d57Eb89785Fc81637f1e72F5"
       abi: Arbiter
       startBlock: 33262600
     mapping:
@@ -23,9 +23,9 @@ dataSources:
       eventHandlers:
         - event: GameFinished(uint256,address,address,bool)
           handler: handleGameFinished
-        - event: GameStarted(uint256,uint256,address[2])
+        - event: GameStarted(indexed address,uint256,uint256,address[2])
           handler: handleGameStarted
-        - event: GameProposed(uint256,uint256,address)
+        - event: GameProposed(indexed address,uint256,uint256,indexed address)
           handler: handleGameProposed  
         - event: PlayerResigned(uint256,address)
           handler: handlePlayerResigned

@@ -1,7 +1,8 @@
 type GameEntity @entity {
   id: ID!
   gameId: BigInt! # uint256
-  stake: BigInt #address
+  rules: Bytes #address
+  stake: BigInt
   proposer: Bytes #address
   winner: Bytes # address
   loser: Bytes # address
