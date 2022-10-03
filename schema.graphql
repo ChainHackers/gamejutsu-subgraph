@@ -7,10 +7,10 @@ type GameEntity @entity {
   winner: Bytes # address
   loser: Bytes # address
   cheater: Bytes # address
-  isDraw: Boolean
-  started: Boolean
-  resigned: Boolean
-  finished: Boolean
+  isDraw: Boolean!
+  started: Boolean!
+  resigned: Boolean!
+  finished: Boolean!
 }
 
 type InRowCounterEntity @entity {
