@@ -4,6 +4,7 @@ type GameEntity @entity {
   rules: Bytes #address
   stake: BigInt
   proposer: Bytes #address
+  accepter: Bytes #address
   winner: Bytes # address
   loser: Bytes # address
   cheater: Bytes # address
