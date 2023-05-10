@@ -128,6 +128,7 @@ export function handleGameProposed(event: GameProposed): void {
 export function handleGameStarted(event: GameStarted): void {
     const entity = loadGameEntity(event.params.gameId)
     entity.gameId = event.params.gameId;
+    entity.accepter = event.params.players[1];
     entity.started = true
     entity.rules = event.params.rules;
     entity.save()

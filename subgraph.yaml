@@ -6,7 +6,7 @@ dataSources:
     name: Arbiter
     network: matic
     source:
-      address: "0x1f0b6DB015198028d57Eb89785Fc81637f1e72F5"
+      address: "0xE3Dc7e9e1b57A4c91546b391e5Eb31f8B630122E"
       abi: Arbiter
       startBlock: 33262600
     mapping:
